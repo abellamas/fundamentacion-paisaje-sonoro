@@ -1,48 +1,27 @@
 {
   "latex-workshop.latex.tools": [
     {
-      "name": "pdflatex",
-      "command": "pdflatex",
-      "args": [
-        "-synctex=1",
-        "-interaction=nonstopmode",
-        "-file-line-error",
-        "-output-directory=%OUTDIR%",
-        "-jobname=LaTeX-manuscript-template-APA---Sato-1-Col-adaptado",
-        "%DOC%"
-      ]
-    },
-    {
-      "name": "bibtex",
-      "command": "bibtex",
-      "args": [
-        "%OUTDIR%/LaTeX-manuscript-template-APA---Sato-1-Col-adaptado"
-      ]
-    },
-    {
-      "name": "copyPdfToRoot",
-      "command": "powershell",
-      "args": [
-        "-NoProfile",
-        "-Command",
-        "Copy-Item -Force '%OUTDIR%/LaTeX-manuscript-template-APA---Sato-1-Col-adaptado.pdf' '%DIR%/LaTeX-manuscript-template-APA---Sato-1-Col-adaptado.pdf'"
-      ]
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": ["%DOC%"]
     }
   ],
   "latex-workshop.latex.recipes": [
     {
-      "name": "pdflatex ×2 + bibtex (apacite)",
-      "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex", "copyPdfToRoot"]
+      "name": "latexmk (biber, build/)",
+      "tools": ["latexmk"]
     }
   ],
-  "latex-workshop.latex.recipe.default": "pdflatex ×2 + bibtex (apacite)",
+  "latex-workshop.latex.recipe.default": "latexmk (biber, build/)",
   "latex-workshop.latex.rootFile.doNotPrompt": true,
-  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.autoBuild.run": "never",
   "latex-workshop.latex.clean.subfolder.enabled": true,
   "latex-workshop.latex.clean.fileTypes": [
     "*.aux",
     "*.bbl",
     "*.blg",
+    "*.bcf",
+    "*.run.xml",
     "*.log",
     "*.out",
     "*.synctex.gz",

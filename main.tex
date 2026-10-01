@@ -1,233 +1,97 @@
-\documentclass[10pt]{article} % [Tama?o funte=10pt]{Tipo de documento=article}%
-\usepackage[english]{babel}
-\usepackage{amsfonts}
-\usepackage{amsmath} % Fuentes para las ecuaciones%
-\usepackage{times} % Fuente parecida a Times New Roman%
-\usepackage{graphicx} %para las figuras%
-\usepackage{float}
-%%%
-\usepackage{geometry} % Definimos los margenes y el tipo de papel.%
- \geometry{
+\documentclass[11pt]{article}
+\usepackage[spanish,es-noquoting]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{
  a4paper,
  total={170mm,257mm},
  left=20mm,
  top=20mm,
  right=25mm,
  bottom=20mm
- }
-%%%
+}
 
-\usepackage{apacite}
-\usepackage{enumitem}
-\newtheorem{tab}{Tabla}
-\renewcommand\tablename{Tabla}
-\renewcommand\tablename{Tabla}
-\renewcommand\contentsname{\'Indice}
-
-%%%
-\usepackage{titling} % Para modificar como se muestran los titulos de las Sections%
+\usepackage{titling}
 \usepackage{titlesec}
 \titleformat{\section}
-  {\uppercase}{\large\textbf{\thesection .}}{1em}{}
-%%%  
+  {\normalfont\large\bfseries}{\thesection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{18pt}{8pt}
 
-%% Como solo queremos que aparezca la fecha y la materia en la primera pagina, no podemos usar headers. Entonces tenemos que agregar esta "minipage" en la primera pagina arriba de todo:
+% ---------------------------------------------------------------------
+% Bibliografia: mismo mecanismo que plan-paisaje-sonoro/untref-plan.cls con
+% la opcion [biblatex] (biblatex-apa, APA 7, backend biber).
+%   \textcite{clave}  -> cita narrativa    Autor (2019)
+%   \parencite{clave} -> cita parentetica  (Autor, 2019)
+%   compilar: pdflatex -> biber -> pdflatex -> pdflatex  (o latexmk)
+% ---------------------------------------------------------------------
+\usepackage{ifthen}
+\usepackage{etoolbox}
+\usepackage[style=apa,backend=biber]{biblatex}
+\DeclareLanguageMapping{spanish}{spanish-apa}
+\setlength{\bibhang}{0.751cm}
+\setlength{\bibitemsep}{6pt}
+\appto{\biburlsetup}{\Urlmuskip=0mu\relax}
+% biblatex-apa usa "&" antes del ultimo autor (forma inglesa); en espanol
+% APA usa "y". Mismo parche que untref-plan.cls.
+\DeclareDelimFormat[bib,biblist]{finalnamedelim}{%
+  \ifthenelse{\value{listcount}>\maxprtauth}
+    {}
+    {\ifthenelse{\value{liststop}>2}
+       {\finalandcomma\addspace\bibstring{and}\space}
+       {\addspace\bibstring{and}\space}}}
+\DeclareDelimFormat[parencite]{finalnamedelim}%
+  {\ifnum\value{liststop}>2 \finalandcomma\fi\addspace\bibstring{and}\space}
+\DeclareDelimFormat[fullcite,fullcitebib]{finalnamedelim}%
+  {\ifnum\value{liststop}>2 \finalandcomma\fi\addspace\bibstring{and}\space}
+\addbibresource{referencias.bib}
+
 \renewcommand\maketitlehooka{%
   \setlength\parindent{0pt}%
   \begin{minipage}{\textwidth}
-    \begin{minipage}{\textwidth}
-      \raggedleft
-      \emph{Acoustic Laboratory}
-      \null\hfill\emph{July 2025, Argentina}
-    \end{minipage}%
-  \end{minipage}\vskip 2.5ex
-  \par
-    \vspace{.4cm}
+    \raggedleft
+    \emph{Paisaje Sonoro en CABA}
+    \null\hfill\emph{Septiembre de 2026, Buenos Aires, Argentina}
+  \end{minipage}\vskip 2ex
+  \par\vspace{.3cm}
 }
-%%%%
+
+\setlength{\parindent}{0.63cm}
+\setlength{\parskip}{0pt}
 
 \begin{document}
 
-\title{\textbf{\Large{Low-frequency localization with varying source directivity in a reverberant room}}}
-\author{\textbf{Benjamín Carisio }\vspace{1ex}%
-}
-\date{\normalsize{Ingeniería de Sonido, Universidad Nacional de Tres de Febrero.}
-\\
-\textit{carisiobenjamin2@gmail.com}\vspace{-1ex}
-}
+\title{\textbf{\Large{Paisaje sonoro en los espacios verdes públicos de la Ciudad de Buenos Aires}}}
+\author{\textbf{Téc. Abel M. Lamas}\vspace{1ex}}
+\date{\normalsize{Ingeniería de Sonido, Universidad Nacional de Tres de Febrero}\\
+\textit{abellamasm@gmail.com}\\
+\textit{Presentado para su consideración al legislador Emanuel Ferrario}\vspace{-1ex}}
 
 \maketitle
-%\vspace*{1cm}
-\normalsize{ Abstract - \emph{This study explores the localization of low-frequency sound sources (below 1.4 kHz) in reverberant environments, focusing on the impact of source directivity. Using auralized pink noise stimuli filtered into one-third octave bands and three directivity factors (\textit{Q}), binaural impulse responses were generated in a simulated living room. An online test with 33 participants revealed that higher directivity improved localization accuracy in the 400 Hz and 500 Hz bands, while performance decreased at 250 Hz. Above 630 Hz, no significant differences were observed. Demographic factors, such as headphone type and test device, also influenced results. These findings underscore the importance of directivity control for enhancing localization in reverberant spaces and point to the need for further studies on lower frequencies and impulsive stimuli.} }
-\vspace*{1cm}
 
+La Ciudad Autónoma de Buenos Aires tiene, según el último Censo, 3.119.304 habitantes \parencite{indec2023}. La superficie de espacio verde público que administra el Gobierno de la Ciudad equivale a 7,03~m² por habitante, pero esa cifra incluye canteros, veredas y cementerios; si se cuentan sólo los parques, las plazas y las plazoletas donde la gente efectivamente pasa tiempo, la relación cae a 3,99~m² por persona \parencite{dgeyc2023}. A eso hay que sumarle que ese número se calcula sobre la población que vive en la Ciudad, sin contar a quienes trabajan o estudian acá y la usan todos los días, de modo que el espacio disponible por persona presente en cualquier momento es, en la práctica, todavía menor.
 
-%Todo esta en 10pt de font size. Para las captions de las tablas y las figuras usar {\small textocualquiera} para que quede en 9pt. 
+La Organización Mundial de la Salud recomienda que toda persona tenga un espacio verde de al menos media hectárea a no más de 300 metros de su vivienda \parencite{who2016}. Hoy, más de 350.000 porteños viven lejos de una plaza \parencite{gadea2021}. El propio Código Urbanístico de la Ciudad reconoce el problema y define los «Espacios Verdes de Proximidad» como aquellos a los que se puede llegar caminando en cinco minutos, unos 400 metros, con el objetivo explícito de reducir el estrés urbano y amortiguar la contaminación en todas sus formas \parencite[art.~10.12.8]{codigourbanistico}.
 
-\section{\large\textbf{Introduction}}
+En ese último punto, se menciona a la contaminación en todas sus formas, lo cual incluye al ruido, y es ahí donde aparece un vacío que este trabajo busca llenar. La disponibilidad de espacios verdes no es sólo una cuestión de metros cuadrados, hay evidencia internacional sólida de que el acceso a un espacio verde cercano reduce la molestia por ruido y los síntomas de estrés en los barrios más expuestos al tránsito \parencite{gidlof2007}, y de que los ambientes sonoros evaluados positivamente se asocian con mejor salud autopercibida y con una recuperación más rápida del estrés \parencite{aletta2018}. Es decir, un espacio verde protege más cuando su sonido también es el adecuado, no sólo cuando tiene suficientes árboles y superficie.
 
-The use of surround sound systems in non-anechoic environments can alter and impair the user experience. Except for rooms specifically treated for this purpose, the room's inherent acoustic response, whether due to unwanted specular reflections or resonant modes, distorts the information received by the listener, causing erroneous perception of source locations. The use of parameters such as the directivity of the loudspeakers, allows to reduce the energy contribution of the room, increasing the direct-to-reverberant energy ratio (\textit{D/R}), minimizing their effects. However, achieving such directivity control becomes difficult as frequency decreases.
+La propia Constitución porteña ordena, promover tanto la preservación y restauración de la calidad sonora como la preservación e incremento de los espacios verdes \parencite[art.~27]{constitucioncaba}. Sin embargo, hoy no existe una herramienta que permita verificar si esa doble obligación se cumple en un espacio verde concreto. La normativa de contaminación acústica que sí se tiene, la Ley 1540,  reserva la máxima protección sonora únicamente a un lugar de toda la Ciudad, la Reserva Ecológica Costanera Sur \parencite{ley1540,decreto740}, y no interviene en ningún caso una medición real del ambiente sonoro. La Ley 1540 define apenas cuatro niveles de evaluación sonora, y la mitad de ellos regula el ruido que entra a un ambiente interior, ya sea desde el exterior o desde otro recinto; incluso en el nivel restante, que sí fija un límite para el ambiente exterior, ese límite es un valor de emisión en decibeles por zona, no una evaluación de cómo se percibe el sonido en el lugar. Dentro de esto se tienen las Áreas de Sensibilidad Acústica al Ambiente Exterior (ASAE), las cuales se asignan sólo según el uso del suelo en base al Código Urbanístico, sin hacer mediciones acústicas. Una plaza de barrio, por más que cumpla todos los requisitos de superficie y accesibilidad, puede tener un ambiente sonoro degradado y no existe hoy ningún mecanismo para detectarlo, mucho menos para exigir que se corrija.
 
-Sound source localization has been a subject of study for a long time. \citeA{Rayleigh} examined the implications of interaural time difference (\textit{ITD}) and interaural level difference (\textit{ILD}) parameters in humans' ability to localize sound sources. These parameters for distant sources exhibit interaural ambiguity, leading the author to define a "cone of confusion". Furthermore, this study has approximated the frequency ranges where these parameters are useful; at high frequencies (above 2 kHz), an acoustic shadow is created by the head, generating interaural level differences, while at mid-low frequencies (below 1 kHz), this level difference is minimal, but an interaural time difference is generated between the two ears. More recent studies have determined that the perceptible high-frequency limit for \textit{ITD} is 1.4 kHz, while below 700 Hz it corresponds to a constant interaural phase difference, given that the wavelength is significantly greater than the head's diameter \shortcite{hflimit}. Additionally, \citeA{mills} has studied these parameters and determined minimum perceptible differences of 10 $\mu$s for \textit{ITD} and 0.5 dB for \textit{ILD}, under optimal conditions. The type of signal used is critical for localization ability; the duplex theory highlights the predominance of \textit{ITD} over \textit{ILD} in broadband signals, thus making low-frequency information dominant \cite{duplex}. However, since level differences can also arise from the distance difference between each ear and the source, this parameter prevails over \textit{ITD} for sources located less than two meters away, where in these cases, a torus of confusion centered on the interaural axis is defined \shortcite{tori}.
+El riesgo de fondo es que, aun si en el futuro se creara una herramienta para evaluar el ambiente sonoro de los espacios verdes, reproduzca el mismo abordaje clásico del control de ruido, que se limita a medir la energía sonora y no contempla cómo las personas efectivamente perciben esos sonidos. Frente a ese riesgo, esta investigación propone adoptar el marco teórico del paisaje sonoro, estandarizado en la ISO 12913-1, que define al paisaje sonoro como el ambiente acústico tal como una persona lo percibe y lo experimenta en su contexto, de modo que no alcanza con medir cuántos decibeles hay en un lugar, sino que además hace falta entender cómo esos sonidos son interpretados por quien los escucha \parencite{iso129131}. Para eso, la ISO 12913-2 propone herramientas de evaluación psicoacústica que van más allá del nivel sonoro continuo equivalente en dBA, que es el que se utiliza en la mayoría de los casos para evaluar el ruido. A esas herramientas se suman investigaciones más recientes y avanzadas, como los modelos matemáticos propuestos por el investigador japonés Yoichi Ando, las funciones de autocorrelación (ACF) y de correlación cruzada interaural (IACF), que describen cómo el sistema auditivo humano procesa un sonido y cuentan con respaldo empírico en mediciones de la actividad del nervio auditivo \parencite{ando2001,soeta2015}.
 
-The previously cited studies were performed using anechoic stimuli in order to avoid any interference that might alter the perception of these phenomena in controlled conditions. However, the typical listening environment tends to be reverberant, which means the effect of the room is underestimated, whereas in reality, it significantly impacts perception \cite{rev1}. Due to the temporal alterations that modify the transmitted sound, it is crucial to understand the envelope of the signal to be localized; \citeA{Hartmann} conducted studies using impulsive and non-impulsive signals in a variable acoustic room. For impulsive signals, the room’s geometry was found to be decisive and independent of the reverberation time, while for non-impulsive signals, reverberation time and the \textit{D/R} ratio were determinant factors. Additionally, broadband signals were the easiest to localize. On the other hand, \citeA{espectrorev} concluded that \textit{ITD} predominates over \textit{ILD} in reverberant spaces, even though level differences provide more precise information than temporal differences.
+\textcite{hermida2019} adaptó estos modelos de Ando al estudio del paisaje sonoro urbano, calculando esos factores sobre grabaciones tomadas en Bogotá y en Brasilia y comparándolos con los atributos perceptuales que un grupo de oyentes entrenados evaluó en laboratorio a partir de esas mismas grabaciones. Esa línea de trabajo se complementa con otra investigación del mismo autor, realizada en tres parques de Lisboa, que comparó los resultados obtenidos con encuestas hechas en el lugar contra los obtenidos en pruebas de laboratorio \parencite{hermida2017}. Estos estudios son un aporte valioso, pero, como toda investigación científica, sus hallazgos necesitan verificarse con datos relevados directamente en el lugar, con público general y en el contexto de otra ciudad, para sumar evidencia a hipótesis que todavía se están poniendo a prueba. A esto se suma que buena parte de estas herramientas de evaluación por parte de los estandares ISO 12913 fueron pensadas originalmente en inglés, y que la única adaptación validada al castellano que existe hasta ahora se hizo con hablantes de Bogotá \parencite{useche2023}. Aun cuando ya hay antecedentes en la región, todavía falta adaptar ciertos términos al español rioplatense, de modo que los próximos trabajos que se hagan en la región de Buenos Aires y tambien en proximidades puedan apoyarse en ese mismo lineamiento.
 
-The aim of this article is to study the localization of sound sources in a reverberant field in the low-frequency range (below 1.4 kHz), modifying the directivity of the source and, therefore, the \textit{D/R} ratio. Unlike previous studies, the listener will always be far from the source, thus avoiding a considerable change in \textit{ILD} that is not related to the source-room interaction. This study seeks to provide useful information for the design of home electroacoustic systems to optimize both frequency and directivity responses, based on the intended use of the equipment.
+Esta investigación propone desarrollar y poner a prueba un método para caracterizar el ambiente sonoro de los espacios verdes de la Ciudad, tomando como caso de estudio un parque público. El objetivo es obtener esas caracterizaciones para aportar evidencia científica que respalde o ponga a prueba las hipótesis planteadas sobre el paisaje sonoro y sobre los modelos matemáticos de Yoichi Ando, de modo que a futuro puedan usarse como sustento en la ejecución, planificación, restauración y preservación de espacios verdes, y resulten útiles a la hora de realizar un estudio de impacto ambiental y acústico. La intención de fondo es que el problema del ruido empiece a pensarse desde herramientas más modernas, y no sólo desde las tradicionales que, si bien siguen siendo útiles hoy, la evidencia ya mostró que resultan insuficientes.
 
-\section{\large\textbf{Methodology}}
-\subsection{Sound stimuli}
+El resultado de este trabajo no reemplaza ninguna política existente, pero puede aportar una base técnica concreta para dos cosas que hoy faltan: un criterio objetivo para evaluar si un espacio verde cumple efectivamente su función de protección frente al ruido, y un antecedente académico argentino en una disciplina, el paisaje sonoro urbano, donde en la región todavía se tienen muy pocos estudios propios. Se comparte este documento con el objetivo de que sirva como iniciativa para pensar, desde el Gobierno de la Ciudad y sus organismos de control, si la calidad sonora de los espacios verdes merece incorporarse como un criterio explícito en la planificación y el mantenimiento del espacio público porteño.
 
-The stimuli were auralized, as this methodology allows for precise control of the source directivity. They consist of pink noise filtered in one-third octave bands, with an 8-second fade-in to eliminate impulsive effects. In the present study, three types of constant directivity sources were used, with $Q$ values of 1, 2, and 4. The directivity values were selected considering the high cost and impracticality of achieving greater directivity within this frequency range in a home surround sound system. For the room acoustics, the data from the study conducted by \citeA{jackson} were employed, generating a space with reverberation times and average volume corresponding to a living room.
+Este documento se entrega al legislador como material de consulta posterior al encuentro sostenido, para que pueda profundizar en tres ejes conversados durante la reunión. El primero es la propuesta de evaluación del paisaje sonoro y la posibilidad de que resulte de utilidad para el trabajo legislativo en la materia. El segundo son las problemáticas vinculadas al ruido en los espacios verdes públicos que identifican los vecinos de la Ciudad, información valiosa tanto para esta investigación como para la agenda legislativa. El tercero es la identificación, junto con el legislador y su equipo, de los parques o plazas que la comunidad considera de mayor relevancia para su vida cotidiana, de modo de orientar hacia alguno de ellos el caso de estudio de esta investigación.
 
-The dimensions of the simulated room are 4.3 m × 4.3 m × 2.4 m, yielding a total volume of $44.4~\text{m}^3$. All surfaces were assigned an average absorption coefficient calculated from the study data. In addition, linear interpolations were performed between octave bands to assign absorption coefficients in one-third octave bands.
+En ese mismo sentido, el acompañamiento del legislador puede resultar especialmente valioso para la convocatoria de participantes del relevamiento in situ, que requiere contar con vecinos dispuestos a recorrer el parque elegido y completar una breve encuesta en el lugar. Se trata de una tarea de reclutamiento laboriosa para un investigador individual, y el vínculo del legislador con organizaciones vecinales, juntas comunales u otros canales de comunicación con la comunidad podría facilitar sensiblemente esa convocatoria.
 
-Since ray tracing is used for the auralization, this technique is valid for frequencies above the Schroeder frequency. For the simulated room, this frequency is 220 Hz. Therefore, the range of the stimuli spans from the one-third octave band of 250 Hz to 1250 Hz. For lower frequencies, a simulation based on the wave equation would be required.
-
-The source arrangement follows an equilateral triangle with the listener at its center. The sources are positioned more than half a wavelength of the lowest frequency under study away from the walls (70 cm) to avoid unwanted variations in the source directivity. The height of the sources matches that of the listener, with both placed at 1.2 m.
-The impulse responses were calculated considering reflections up to the 12th order. Subsequently, the stimuli were processed for binauralization, resulting in 8 stimulus pairs per source, yielding a total of 24 pairs. Figure \ref{fig:BRIRS} presents the binaural impulse responses for the left source as an example.
-
-Due to the symmetry employed, the binaural response for the right source is identical but with inverted channels. Each impulse response includes a reverberation tail designed according to the initial slope of early reflections, ensuring consistency with the space's acoustic characteristics.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/BRIRS.png}
-    \caption{Binaural impulse responses obtained.}
-    \label{fig:BRIRS}
-\end{figure}
-
-\subsection{Objetive parameter}
-
-In a room, reverberant energy significantly impairs the ability to localize sound sources, as it alters the ILD and ITD parameters due to reflections. This study aims to modify the source directivity to reduce the energy radiated towards the room, thereby mitigating this effect.
-
-By varying the source directivity factor, the ratio between direct and reverberant energy is modified. The D/R ratio is the objective parameter of this research. Table \ref{tab:d/r} presents the D/R values obtained for each source from the impulse responses.
-
-\begin{table}[h]
-    \centering
-    \caption{Values of D/R obtained for each directivity factor.}
-    \begin{tabular}{c c}\hline
-        Q & $D/R$ [dB] \\ \hline
-        1 &  -8.6\\
-        2 & -2.8 \\
-        4 & 0.2 \\ \hline
-    \end{tabular}
-    \label{tab:d/r}
-\end{table}
-
-As can be observed, the more directive the source, the greater the direct energy relative to the reverberant energy perceived. This helps minimize the impact on binaural parameters, resulting in more accurate source localization.
-
-\subsection{Test method}
-
-The test to be performed involves presenting an audio stimulus from the left or right source. The source is selected randomly for each audio. The presented stimuli correspond to the third-octave bands under study and each source directivity. The participant will be asked to indicate which source the sound is coming from.
-
-As mentioned earlier, the stimuli consist of pink noise filtered digitally into one-third octave bands using 72 dB/oct. Butterworth filters, with an 8-second fade-in and a total duration of 12 seconds. Figure \ref{fig:estimulo} shows the result of the binauralization of a 400 Hz one-third octave stimulus with the BRIR, as an example.
-
-The stimuli are presented in three groups, labeled A, B, and C, each corresponding to a different type of source, with directivity factors of 1, 2, and 4, respectively. Each group contains eight stimuli, one for each one-third octave band. Thus, the participant will listen to 24 stimuli, each lasting 12 seconds, leading to an approximate test duration of 5 minutes. The source reproducing the stimuli was randomly selected using Python code. The sequence and final configuration were stored for further analysis.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/Imagen1.png}
-    \caption{Stimuli of third-octave pink noise centered at 400 Hz convolved with BRIR.}
-    \label{fig:estimulo}
-\end{figure}
-
-Participants must not have hearing impairments and are required to use headphones to complete the test, as it will be conducted online. Additionally, a trial stimulus will be provided at the beginning to adjust the playback level, ensuring it remains constant throughout the test. The trial stimulus consists of pink noise filtered in the 1250 Hz third-octave band, as this frequency is used for the stimulus to be presented, given that it lies within a region of high auditory sensitivity. The user is recommended to start with the minimum level and increase it until reaching a level that does not cause discomfort.
-
-For the post-analysis of the results, participants will also complete a questionnaire to segment the data and conduct differentiated analyses if necessary. The questionnaire will include the following questions:
-
-\begin{enumerate}[label=\alph*)]
-    \item Do you usually listen to surround sound systems? How often?
-    \item Do you usually listen to music with headphones? How often?
-    \item What equipment are you using to conduct the test?
-    \item What type of headphones are you using?
-    \item Do you work or study something related to sound?
-    \item Are you taking the test in a noisy environment?
-\end{enumerate}
-As the stimuli are presented, participants complete an online survey, indicating where they perceived the sound was coming from between two options, left or right.
-
-\section{\large\textbf{Results}}
-\subsection{Sample}
-The sample consisted of 33 participants. From the demographic data collected, shown in Figure \ref{fig:demografico}, responses were obtained from 22 participants who reported working or studying in a sound-related field. Only 2 participants completed the test under noisy conditions. Regarding the headphones used during the test, 20 participants used On-ear/Over-ear headphones, while the rest used In-ear headphones. For the devices used during the test, 10 participants used a mobile phone, 10 used a computer, and 13 used a computer with an external audio interface. The majority of participants reported listening to music with headphones, while only 6 stated they did not engage in this activity. In the case of surround sound systems, the opposite trend was observed; only 14 participants reported using surround sound systems, with 11 of them doing so less than once per week.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/prueba.png}
-    \caption{Demographic distribution obtained for each question.}
-    \label{fig:demografico}
-\end{figure}
-
-\subsection{Data Analysis}
-Regarding the localization test conducted, the overall accuracy rate distribution is shown in Figure \ref{fig:porcentajeQ}. It was verified that this distribution does not follow a normal distribution, as determined by a Shapiro-Wilk test (p-value $<$ 0.05). Additionally, the distribution of correct responses for each source directivity was evaluated using the same method and criterion, resulting in a non-normal distribution for each directivity. For this reason, results from participants whose scores for more than one source directivity were identified as outliers (according to the interquartile range criterion) were excluded. Based on this criterion, a total of 3 participants were removed.
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/PorcentajeQ.png}
-    \caption{Percentage of correct answers for each directivity factor.}
-    \label{fig:porcentajeQ}
-\end{figure}
-
-The decrease in the percentage of correct responses between directivity 1 and directivity 2 is 8\%, while the increase between directivity 2 and 4 is 11\%. A $\chi^2$ analysis was performed to determine whether the directivity factor significantly influenced localization ability, resulting in a p-value $<$ 0.05, confirming it as a significant factor.
-
-The correct responses by frequency were also analyzed, as shown in Figure \ref{fig:porcentajeF}. This figure reveals a considerable decrease in accuracy rates within the 250 Hz band, while bands at 400 and 500 Hz show an improvement in localization ability for the source with directivity 4.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/tercios.png}
-    \caption{Percentage of correct answers for each third-octave.}
-    \label{fig:porcentajeF}
-\end{figure}
-
-Separate $\chi^2$ analyses were conducted for each demographic question. Significant differences (p-value $<$ 0.05) were found for the type of headphones used, with an overall accuracy increase of 7.8\%. Figure \ref{fig:porcentaje_aur} shows the frequency differences obtained for each type of headphone.
-
-Additionally, significant differences were observed in the device used during the test, specifically between mobile phones and computers/computers with an external audio interface, with an 11\% increase for computers. No differences were found between the computer and the computer with external audio interface groups. Figure \ref{fig:porcentaje_disp} shows the percentage of correct answers for each device used. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/auriculares.png}
-    \caption{Percentages of correct answers for each type of headphone used.}
-    \label{fig:porcentaje_aur}
-\end{figure}
-
-For participants who study or work in a sound-related field, a significant 10\% difference in accuracy was noted compared to those who do not, with the latter achieving 71.7\% accuracy and the former reaching 81.9\%. 
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/dispositivos.png}
-    \caption{Percentages of correct answers for each device used.}
-    \label{fig:porcentaje_disp}
-\end{figure}
-
-Lastly, for participants who reported listening to surround sound systems multiple times a week, a significant difference was noted, favoring those who answered "no" with an average difference of 15\%. Figure \ref{fig:porcentaje_surround} shows the percentage of correct answers by frequency of surround sound listening. No differences were found for the other demographic questions.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\textwidth]{Figures/surround.png}
-    \caption{Percentages of correct answers by frequency of surround sound listening.}
-    \label{fig:porcentaje_surround}
-\end{figure}
-
-\section{\large\textbf{Discussion}}
-From Figure \ref{fig:porcentajeQ}, it can be observed that the average correct response rate does not correlate with the $Q$ factor. However, a notable difference between sources with directivities 2 and 4 is evident. This variation can be attributed to differences in the D/R parameter, as reported by \citeA{espectrorev}, which highlights a proportional relationship between both parameters. Additionally, similarities were found with previous studies on sound localization using third-octave filtered pink noise in reverberant rooms \cite{rev1}.
-
-For sources with directivities 1 and 2, however, the difference is contrary to expectations. This could be due to the exclusion of the source balloon, considering only the directivity factor $Q$, which could introduce a potential source of error. When examining this difference across the spectrum in Figure \ref{fig:porcentajeF}, notable variation is observed in the 400 and 500 Hz bands for the source with directivity 4. This suggests that, unlike other sources, localization ability improved considerably in these bands. In the 250 Hz band, the percentage of correct responses is close to 50\%, which does not strongly indicate correct localization. Above the 500 Hz band, there is minimal variation.
-
-Moreover, results show minimal difference between directivities 1 and 2, suggesting that this increase in directivity does not significantly enhance localization ability within the frequency range investigated. Starting from the 800 Hz band, all directivities exhibit similar accuracy rates. This could be due to room reverberation, which decreases consistently, and, in higher third-octave bands, increases the $D/R$ ratio, according to \citeA{Hartmann}.
-
-In terms of results segmented by demographic questions, a reduced localization ability was found for In-Ear headphones. Participants who took the test on a mobile phone also showed decreased performance. This may be due to the fact that all participants who completed the test on a mobile phone used In-Ear headphones, whereas only 3 participants used In-Ear headphones with a computer, suggesting linked results. This difference may be attributable to possible audio compression applied by mobile devices, either due to the platforms used or the device itself.
-
-\section{\large\textbf{Conclusion}}
-In this study, the influence of the directivity factor on binaural parameters and, consequently, on the ability to localize sound sources, has been determined. Although no significant differences were found overall, an improvement in localization ability was observed for the source with a directivity factor of 4, in the 400 and 500 Hz bands. This finding regarding the impact of source directivity suggests that this source modification significantly enhances localization in this range of the spectrum; however, the accuracy rate for other sources remained high (over 80\%), indicating that this improvement is not essential. Above 630 Hz, all sources exhibited similar behavior, with no one source standing out. For the 250 Hz band, localization ability decreased considerably, leading to the conclusion that localization difficulty increases at this frequency.
-
-A considerable source of error may stem from the geometry of the directivity balloons used for each source. While the directivity 1 source had a perfectly omnidirectional directivity, no information on the spatial energy distribution was available for the other sources. This could result in concentrated lobes that increase the perceived energy at the measurement point, potentially producing unexpected results, such as the reduction in correct responses between directivities 1 and 2.
-
-It would be beneficial to extend the study to even lower frequencies through simulations based on the wave equation. This approach could help determine the limits of localization ability and assess whether directivity influences lower frequencies. However, achieving directivity factors of 4 in the bands where localization improvements were noted remains impractical or prohibitively expensive. Given that this improvement is slight, pursuing this level of directivity would likely not be worthwhile.
-
-Finally, conducting this study in situ would be valuable to assess whether differences from the current findings emerge. This could enable validation of the results and allow for testing within simulated living room geometries to investigate the impact on perception further.
-
-It would be of interest to conduct a study on the localization of impulsive sounds in which low frequencies are reproduced through a fixed omnidirectional system (such as a subwoofer), while mid-high frequencies are reproduced through sources that are meant to be localized, using the crossover frequency as a parameter. This approach would complement the findings of the current study and allow for the consideration of such stimuli in the design of an electroacoustic system. According to previous studies, room geometry should be considered in these cases.
-
-\renewcommand{\refname}{\large\MakeUppercase{\textbf{References}}}
-
-\bibliographystyle{apacite}
-\bibliography{refexample}
+\section*{Referencias}
+\printbibliography[heading=none]
 
 \end{document}
